@@ -39,8 +39,13 @@ final class DataManager{
     }
     
     func updateFavData(index: Int, _ fav:Bool) {
-        dataList[index].isFav = fav
-        print(dataList[index].isFav!)
+        if let i = dataList.firstIndex(where: { $0.dataId == index }){
+            dataList[i].isFav = fav
+            print(dataList[i].isFav!)
+        }else{
+            print("매칭하는 것이 없음")
+        }
+
     }
     
     func updateData(index: Int, _ data:DataModel) {
@@ -49,7 +54,9 @@ final class DataManager{
     }
     
     func deleteData(index: Int) {
-        dataList.remove(at: index)
+        dataList.removeAll{ data in
+            data.dataId == index
+        }
     }
     
     func acendingData(){

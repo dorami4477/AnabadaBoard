@@ -92,16 +92,7 @@ private let mainImageView:UIImageView = UIImageView()
         self.mainImageView.layer.cornerRadius = 10
     }
     
-    //테이블 재사용시 데이터 리셋
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        mainImageView.image = .none
-        titleLabel.text = ""
-        descriptionLabel.text = ""
-        priceLabel.text = ""
-        favoriteButton.setImage(nil, for: .normal)
-    }
-    
+
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

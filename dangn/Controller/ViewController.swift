@@ -188,7 +188,8 @@ final class ViewController: UIViewController, UpdateFavoriteData {
             sender.setImage(UIImage(systemName: "heart.fill"), for: .normal)
             dataManager.updateFavData(index: index, true)
             if !filtered.contains(where: { $0.dataId == index }){
-                filtered.append(dataManager.getDataList()[index])
+                guard let item = dataManager.getDataList().first(where: { $0.dataId == index }) else { return }
+                filtered.append(item)
             }
             
             print(filtered.count)
@@ -201,26 +202,25 @@ final class ViewController: UIViewController, UpdateFavoriteData {
 // MARK: - UITableViewDataSource
 extension ViewController:UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return dataManager.getDataList().count
+        if onHeartfilter{
+            return filtered.count
+        }else{
+            return dataManager.getDataList().count
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MyCell", for: indexPath) as! MyCell
        
         if dataManager.getDataList()[indexPath.row].isFav! {
-            if !filtered.contains(where: { $0.dataId == dataManager.getDataList()[indexPath.row].dataId }){
+           if !filtered.contains(where: { $0.dataId == dataManager.getDataList()[indexPath.row].dataId }){
                 filtered.append(dataManager.getDataList()[indexPath.row])
             }
         }
  
         //즐겨찾기 필터가 온상태이면
         if onHeartfilter{
-           if(indexPath.row > filtered.count-1){
-                return cell
-            } else {
                 cell.data = filtered[indexPath.row]
-            }
-            
         }else{
             //필터가 오프 상태이면서
             //sort 버튼 클릭 상태에 따라 다른 데이터 전송
@@ -249,7 +249,6 @@ extension ViewController:UITableViewDelegate{
         detailVC.modalPresentationStyle = .fullScreen
         detailVC.data = dataManager.getDataList()[indexPath.row]
         self.navigationController?.pushViewController(detailVC, animated: true)
-        //  }
     }
 }
 
